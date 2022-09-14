@@ -1,5 +1,5 @@
-const abcModel=require("../models/internModel.js")
-const abcModel=require("../models/collageModel.js")
+const internModel = require("../models/internModel.js")
+const collageModel = require("../models/collageModel.js")
 
 
 
