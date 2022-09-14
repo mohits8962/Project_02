@@ -16,15 +16,32 @@ const internSchema = new mongoose.Schema({
             }
           },
     },
-    
-    
-}, { timestamps: true });
+    mobile:{
+      type: String,
+      unique: true,
+      require: true,
+      validate(value) {
+        if (!validator.isMobilePhone(value)) {
+          throw new Error("invalid mobile number");
+        }
+      },
+     // isMobilePhone(str [, locale [, options]])
+    },
+    collegeId:{
+      type: ObjectId,
+      ref: 'collage'
+    },
+    isDeleted:{
+      type: Boolean,
+      default: false
+    },
+  }, { timestamps: true });
 
 
 
 
 
-module.exports = mongoose.model('', internSchema)
+module.exports = mongoose.model('intern', internSchema)
 
 
 

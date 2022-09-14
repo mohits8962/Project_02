@@ -7,20 +7,10 @@ const collageSchema = new mongoose.Schema({
         type: String,
         require: true,
         unique: true,
-        validate(value) {
-            if (!validator.isAlpha(value)) {
-                throw new Error("name is invalid");
-            }
-        }
     },
     fullName: {
         type: String,
         require: true,
-        validate(value) {
-            if (!validator.isAlpha(value)) {
-                throw new Error("fullName is invalid");
-            }
-        }
     },
     logoLink: {
         type: String,
