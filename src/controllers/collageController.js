@@ -1,6 +1,7 @@
 
 const collageModel = require("../models/collageModel.js")
 const validUrl = require('valid-url')
+const internModel = require("../models/internModel.js")
 
 
 
@@ -14,11 +15,15 @@ const isVAlidRequestBody = function(requestBody){
     return Object.keys(requestBody).length > 0
 }
 
+
+
+
 const createCollage = async function (req, res) {
 
     try {
 
         const requestBody = req.body
+        
 
         if(!isVAlidRequestBody(requestBody)){
             return res.status(400).send({status: false, msg: "please input collage Details"})
@@ -62,4 +67,51 @@ const createCollage = async function (req, res) {
 
 
 
-module.exports.createCollage = createCollage
+ let getCollegeDetails = async function(req,res){
+  try{
+    let data = req.query
+
+          if(!data.collegeName){
+             return res.status(400).send({status: false, msg: 'please input college Name is query params'})
+         }
+          if(Object.keys(data).length > 1){
+             return res.status(400).send({status: false, msg: 'user only allow to input collegeName in query params'})
+        }
+    
+    let findCollege = await collageModel.findOne({name : data.collegeName, isDeleted : false})
+    const {name, fullName, logoLink} = findCollege
+
+    if(findCollege.length == 0) {
+    return res.status(404).send({status : false, msg : "No such a College"})
+    }
+    //console.log(findCollege);
+
+    
+
+    let CollegeId = findCollege._id
+    //console.log(CollegeId)
+
+    let findIntern = await internModel.find({collegeId : CollegeId}).select({name : 1, email : 1, mobile : 1})
+    
+    let obj = {
+        name : name,
+        fullName : fullName,
+        logoLink : logoLink,
+        interns : findIntern
+    }
+
+    return res.status(400).send({data : obj})
+}
+catch(err){
+    res.status(500).send({status : false, error : err.message})
+}
+
+
+
+
+ }
+
+// ----------------------------|| EXPROTING MODULE TO ROUTE.JS ||------------------------------------
+
+module.exports.createCollage = createCollage           // EXPORT CREATE COLLEGE
+module.exports.getCollegeDetails = getCollegeDetails   // EXPORT GET COLLEGE

@@ -20,12 +20,6 @@ const internSchema = new mongoose.Schema({
       type: String,
       unique: true,
       require: true,
-      validate(value) {
-        if (!validator.isMobilePhone(value)) {
-          throw new Error("invalid mobile number");
-        }
-      },
-     // isMobilePhone(str [, locale [, options]])
     },
     collegeId:{
       type: ObjectId,
