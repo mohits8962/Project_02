@@ -1,6 +1,5 @@
 const mongoose = require('mongoose');
 const ObjectId = mongoose.Schema.Types.ObjectId
-const validator = require("validator");
 
 const internSchema = new mongoose.Schema({
     name:{
@@ -10,11 +9,6 @@ const internSchema = new mongoose.Schema({
     email:{
         type: String,
         unique: true,
-        validate(value) {
-            if (!validator.isEmail(value)) {
-              throw new Error("email is Invalid");
-            }
-          },
     },
     mobile:{
       type: String,

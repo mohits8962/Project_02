@@ -20,8 +20,6 @@
     "express": "^4.18.1",
     "mongoose": "^6.6.0",
     "nodemon": "^2.0.19",
-    "valid-url": "^1.0.9",
-    "validate-phone-number-node-js": "^0.0.1",
-    "validator": "^13.7.0"
+    "valid-url": "^1.0.9"
   }
 }

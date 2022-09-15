@@ -1,6 +1,5 @@
 const internModel = require("../models/internModel.js")
 const collageModel = require("../models/collageModel.js")
-const validator = require("validator");
 
 const isValid = function (value) {
     if (typeof value === 'undefined' || value === null) return false
@@ -8,6 +7,7 @@ const isValid = function (value) {
     return true
 }
 
+// ----------------|| function for validate empty resquest body ||--------------------
 const isVAlidRequestBody = function(requestBody){
     return Object.keys(requestBody).length > 0
 }
@@ -17,8 +17,9 @@ const createIntern = async function(req,res){
     try {
        const requestBody = req.body
 
-        // const emailRegex = /^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+$/
-        // const nameRegex = /^[a-z\s]+$/i
+         const emailRegex = /^\w+([\.-]?\w+)@\w+([\.-]?\w+)(\.\w{2,3})+$/
+
+         const nameRegex = /^[a-z\s]+$/i
         const mobileRegex = /^[0-9]{10}$/
 
         if(!isVAlidRequestBody(requestBody)){
@@ -31,6 +32,11 @@ const createIntern = async function(req,res){
             return res.status(400).send({ status: false, msg: 'name is required' })
         }
 
+        if(!requestBody.name.match(nameRegex)) {
+        return res.status(400).send({status : false, msg : "Invalid format of name"})
+        }
+   
+
         if (!isValid(mobile)) {
             return res.status(400).send({ status: false, msg: 'mobile number is required' })
         }
@@ -40,17 +46,17 @@ const createIntern = async function(req,res){
           return res.status(400).send({status: false, msg: "Mobile no already registered"})
         }
 
-        if(!requestBody.mobile.match(mobileRegex)) 
+        if(!requestBody.mobile.match(mobileRegex)) {
         return res.status(400).send({status : false, msg : "Invalid format of mobile number"})
-
+        }
 
         if (!isValid(email)) {
             return res.status(400).send({ status: false, msg: 'email is required' })
         }
 
-        if (!validator.isEmail(email)){
-          return res.status(400).send({ status: false, msg: 'invaild email address' })
-        }
+        if(!requestBody.email.match(emailRegex)) {
+          return res.status(400).send({status : false, msg : "Invalid format of email"})
+          }
 
         const isEmailAlreadyUsed = await internModel.findOne({email})
         if(isEmailAlreadyUsed){
@@ -75,7 +81,7 @@ const createIntern = async function(req,res){
     }
   
     let newIntern = await internModel.create(collageId);
-    return res.status(201).send({ status: true, data: newIntern });
+    return res.status(201).send({ status: true, msg: 'successfully created', data: newIntern });
 
     } catch (error) {
         return  res.status(500).send({ status: false, error: error.message });
